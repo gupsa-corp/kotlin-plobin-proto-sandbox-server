@@ -40,13 +40,15 @@ class SandboxTemplateVersionGetControllerTest {
         every { repository.findById(versionId) } returns Optional.of(existingEntity)
 
         // When
-        val response = controller.getVersion(versionId)
+        val responseEntity = controller.getVersion(versionId)
 
         // Then
         verify(exactly = 1) { repository.findById(versionId) }
 
-        assertNotNull(response)
-        assertEquals(versionId, response!!.id)
+        assertNotNull(responseEntity)
+        assertTrue(responseEntity.statusCode.is2xxSuccessful)
+        val response = responseEntity.body!!
+        assertEquals(versionId, response.id)
         assertEquals(1L, response.sandboxTemplateId)
         assertEquals("v1.0.0", response.versionName)
         assertEquals("1.0.0", response.versionNumber)
@@ -63,11 +65,11 @@ class SandboxTemplateVersionGetControllerTest {
         every { repository.findById(nonExistentId) } returns Optional.empty()
 
         // When
-        val response = controller.getVersion(nonExistentId)
+        val responseEntity = controller.getVersion(nonExistentId)
 
         // Then
         verify(exactly = 1) { repository.findById(nonExistentId) }
-        assertNull(response)
+        assertTrue(responseEntity.statusCode.is4xxClientError)
     }
 
     @Test
@@ -87,13 +89,15 @@ class SandboxTemplateVersionGetControllerTest {
         every { repository.findById(versionId) } returns Optional.of(existingEntity)
 
         // When
-        val response = controller.getVersion(versionId)
+        val responseEntity = controller.getVersion(versionId)
 
         // Then
         verify(exactly = 1) { repository.findById(versionId) }
 
-        assertNotNull(response)
-        assertEquals(versionId, response!!.id)
+        assertNotNull(responseEntity)
+        assertTrue(responseEntity.statusCode.is2xxSuccessful)
+        val response = responseEntity.body!!
+        assertEquals(versionId, response.id)
         assertEquals(2L, response.sandboxTemplateId)
         assertEquals("v2.0.0-beta", response.versionName)
         assertEquals("2.0.0-beta", response.versionNumber)
@@ -122,13 +126,15 @@ class SandboxTemplateVersionGetControllerTest {
         every { repository.findById(versionId) } returns Optional.of(existingEntity)
 
         // When
-        val response = controller.getVersion(versionId)
+        val responseEntity = controller.getVersion(versionId)
 
         // Then
         verify(exactly = 1) { repository.findById(versionId) }
 
-        assertNotNull(response)
-        with(response!!) {
+        assertNotNull(responseEntity)
+        assertTrue(responseEntity.statusCode.is2xxSuccessful)
+        val response = responseEntity.body!!
+        with(response) {
             assertEquals(existingEntity.id, id)
             assertEquals(existingEntity.sandboxTemplateId, sandboxTemplateId)
             assertEquals(existingEntity.versionName, versionName)

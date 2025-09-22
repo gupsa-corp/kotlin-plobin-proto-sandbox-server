@@ -101,7 +101,7 @@ class Service(
      */
     private fun findOrCreateTemplate(templateName: String, description: String?): SandboxTemplate {
         // 기존 템플릿 찾기
-        val existingTemplate = sandboxTemplateRepository.findBySandboxFolderNameAndIsActiveTrue(templateName)
+        val existingTemplate = sandboxTemplateRepository.findBySandboxFolderNameAndIsActive(templateName, true)
 
         return existingTemplate ?: run {
             // 새 템플릿 생성

@@ -41,14 +41,16 @@ class SandboxTemplateVersionDeleteControllerTest {
         every { repository.deleteById(versionId) } returns Unit
 
         // When
-        val response = controller.deleteVersion(versionId)
+        val responseEntity = controller.deleteVersion(versionId)
 
         // Then
         verify(exactly = 1) { repository.findById(versionId) }
         verify(exactly = 1) { repository.deleteById(versionId) }
 
-        assertNotNull(response)
-        assertEquals(versionId, response!!.id)
+        assertNotNull(responseEntity)
+        assertTrue(responseEntity.statusCode.is2xxSuccessful)
+        val response = responseEntity.body!!
+        assertEquals(versionId, response.id)
         assertEquals("Version successfully deleted", response.message)
         assertEquals("v1.0.0", response.versionName)
         assertEquals("1.0.0", response.versionNumber)
@@ -62,12 +64,12 @@ class SandboxTemplateVersionDeleteControllerTest {
         every { repository.findById(nonExistentId) } returns Optional.empty()
 
         // When
-        val response = controller.deleteVersion(nonExistentId)
+        val responseEntity = controller.deleteVersion(nonExistentId)
 
         // Then
         verify(exactly = 1) { repository.findById(nonExistentId) }
         verify(exactly = 0) { repository.deleteById(any()) }
-        assertNull(response)
+        assertTrue(responseEntity.statusCode.is4xxClientError)
     }
 
     @Test
@@ -88,14 +90,16 @@ class SandboxTemplateVersionDeleteControllerTest {
         every { repository.deleteById(versionId) } returns Unit
 
         // When
-        val response = controller.deleteVersion(versionId)
+        val responseEntity = controller.deleteVersion(versionId)
 
         // Then
         verify(exactly = 1) { repository.findById(versionId) }
         verify(exactly = 1) { repository.deleteById(versionId) }
 
-        assertNotNull(response)
-        assertEquals(versionId, response!!.id)
+        assertNotNull(responseEntity)
+        assertTrue(responseEntity.statusCode.is2xxSuccessful)
+        val response = responseEntity.body!!
+        assertEquals(versionId, response.id)
         assertEquals("v2.0.0", response.versionName)
         assertEquals("2.0.0", response.versionNumber)
     }
@@ -118,14 +122,16 @@ class SandboxTemplateVersionDeleteControllerTest {
         every { repository.deleteById(versionId) } returns Unit
 
         // When
-        val response = controller.deleteVersion(versionId)
+        val responseEntity = controller.deleteVersion(versionId)
 
         // Then
         verify(exactly = 1) { repository.findById(versionId) }
         verify(exactly = 1) { repository.deleteById(versionId) }
 
-        assertNotNull(response)
-        assertEquals(versionId, response!!.id)
+        assertNotNull(responseEntity)
+        assertTrue(responseEntity.statusCode.is2xxSuccessful)
+        val response = responseEntity.body!!
+        assertEquals(versionId, response.id)
         assertEquals("v3.0.0-alpha", response.versionName)
         assertEquals("3.0.0-alpha", response.versionNumber)
         assertEquals("Version successfully deleted", response.message)

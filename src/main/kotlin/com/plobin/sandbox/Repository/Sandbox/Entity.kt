@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Table(name = "sandboxes")
 data class Entity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0,
 
     @Column(name = "uuid", nullable = false, unique = true, length = 255)
@@ -47,6 +47,6 @@ data class Entity(
     @JoinColumn(name = "template_id", insertable = false, updatable = false)
     val sandboxTemplate: com.plobin.sandbox.Repository.SandboxTemplate.Entity? = null,
 
-    @OneToMany(mappedBy = "sandbox", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sandbox", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val versions: List<com.plobin.sandbox.Repository.SandboxVersion.Entity> = emptyList()
 )

@@ -12,12 +12,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import java.io.File
 import java.time.LocalDateTime
 
 @RestController("sandboxDeleteController")
 @RequestMapping("/api/sandboxes")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "Sandbox", description = "샌드박스 관리 API")
-class Controller(private val sandboxRepository: SandboxRepository) {
+class Controller(
+    private val sandboxRepository: SandboxRepository,
+    private val sandboxVersionRepository: SandboxVersionRepository
+) {
 
     @Operation(
         summary = "${ResourceNames.SANDBOX} 삭제",

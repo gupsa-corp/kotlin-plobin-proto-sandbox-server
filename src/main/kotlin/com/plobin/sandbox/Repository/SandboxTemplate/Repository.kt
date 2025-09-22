@@ -13,5 +13,5 @@ interface Repository : JpaRepository<Entity, Long> {
     fun findByIdAndDeletedAtIsNull(id: Long): Entity?
 
     // 업로드 서비스를 위한 추가 메서드
-    fun findBySandboxFolderNameAndIsActiveTrue(sandboxFolderName: String): Entity?
+    fun findBySandboxFolderNameAndIsActive(sandboxFolderName: String, isActive: Boolean): Entity?
 }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Table(name = "sandbox_template_versions")
 data class Entity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0,
 
     @Column(name = "sandbox_template_id", nullable = false)
@@ -26,9 +26,5 @@ data class Entity(
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "updated_at", nullable = false)
-    val updatedAt: LocalDateTime = LocalDateTime.now(),
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sandbox_template_id", insertable = false, updatable = false)
-    val sandboxTemplate: com.plobin.sandbox.Repository.SandboxTemplate.Entity? = null
+    val updatedAt: LocalDateTime = LocalDateTime.now()
 )

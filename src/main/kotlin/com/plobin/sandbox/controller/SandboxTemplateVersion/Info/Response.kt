@@ -49,21 +49,14 @@ data class Response(
 
     companion object {
         fun fromEntity(entity: com.plobin.sandbox.Repository.SandboxTemplateVersion.Entity): Response {
-            val templateInfo = entity.template?.let { template ->
-                TemplateInfo(
-                    name = template.name,
-                    folderPath = template.folderPath,
-                    description = template.description,
-                    isActive = template.isActive,
-                    fullVersionPath = "${template.folderPath}/${entity.versionName}"
-                )
-            }
+            // TODO: Fetch template info from repository if needed
+            val templateInfo: TemplateInfo? = null
 
             return Response(
                 id = entity.id,
-                templateId = entity.templateId,
+                templateId = entity.sandboxTemplateId,
                 versionName = entity.versionName,
-                versionNumber = entity.versionNumber,
+                versionNumber = entity.versionNumber.toInt(),
                 description = entity.description,
                 createdAt = entity.createdAt,
                 updatedAt = entity.updatedAt,

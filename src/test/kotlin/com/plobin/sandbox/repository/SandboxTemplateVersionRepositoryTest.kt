@@ -141,11 +141,11 @@ class SandboxTemplateVersionRepositoryTest @Autowired constructor(
     @Test
     fun `생성일_기준_내림차순_정렬을_테스트한다`() {
         // When
-        val versions = repository.findBySandboxTemplateIdOrderByCreatedAtDesc(1L)
+        val versions = repository.findBySandboxTemplateIdOrderByCreatedAtDesc(sandboxTemplate1.id)
 
         // Then
         assertEquals(3, versions.size)
-        assertTrue(versions.all { it.sandboxTemplateId == 1L })
+        assertTrue(versions.all { it.sandboxTemplateId == sandboxTemplate1.id })
 
         // Verify descending order by creation date
         for (i in 0 until versions.size - 1) {
@@ -163,11 +163,11 @@ class SandboxTemplateVersionRepositoryTest @Autowired constructor(
     @Test
     fun `템플릿_ID와_버전번호로_특정_버전_조회를_테스트한다`() {
         // When
-        val version = repository.findBySandboxTemplateIdAndVersionNumber(1L, "1.0.0")
+        val version = repository.findBySandboxTemplateIdAndVersionNumber(sandboxTemplate1.id, "1.0.0")
 
         // Then
         assertNotNull(version)
-        assertEquals(1L, version!!.sandboxTemplateId)
+        assertEquals(sandboxTemplate1.id, version!!.sandboxTemplateId)
         assertEquals("1.0.0", version.versionNumber)
         assertEquals("v1.0.0", version.versionName)
         assertEquals("Initial release", version.description)
@@ -176,7 +176,7 @@ class SandboxTemplateVersionRepositoryTest @Autowired constructor(
     @Test
     fun `존재하지_않는_조합에_대해_null_반환을_테스트한다`() {
         // When
-        val version = repository.findBySandboxTemplateIdAndVersionNumber(1L, "9.9.9")
+        val version = repository.findBySandboxTemplateIdAndVersionNumber(sandboxTemplate1.id, "9.9.9")
 
         // Then
         assertNull(version)
@@ -194,11 +194,11 @@ class SandboxTemplateVersionRepositoryTest @Autowired constructor(
     @Test
     fun `null_설명을_가진_엔티티_처리를_테스트한다`() {
         // When
-        val version = repository.findBySandboxTemplateIdAndVersionNumber(2L, "2.0.0")
+        val version = repository.findBySandboxTemplateIdAndVersionNumber(sandboxTemplate2.id, "2.0.0")
 
         // Then
         assertNotNull(version)
-        assertEquals(2L, version!!.sandboxTemplateId)
+        assertEquals(sandboxTemplate2.id, version!!.sandboxTemplateId)
         assertEquals("2.0.0", version.versionNumber)
         assertNull(version.description)
     }
@@ -207,7 +207,7 @@ class SandboxTemplateVersionRepositoryTest @Autowired constructor(
     fun `새_엔티티_저장과_ID_자동_생성을_테스트한다`() {
         // Given
         val newVersion = SandboxTemplateVersionEntity(
-            sandboxTemplateId = 3L,
+            sandboxTemplateId = sandboxTemplate1.id,
             versionName = "v3.0.0",
             versionNumber = "3.0.0",
             description = "New template version",
@@ -221,13 +221,13 @@ class SandboxTemplateVersionRepositoryTest @Autowired constructor(
 
         // Then
         assertTrue(savedVersion.id > 0)
-        assertEquals(3L, savedVersion.sandboxTemplateId)
+        assertEquals(sandboxTemplate1.id, savedVersion.sandboxTemplateId)
         assertEquals("v3.0.0", savedVersion.versionName)
         assertEquals("3.0.0", savedVersion.versionNumber)
         assertEquals("New template version", savedVersion.description)
 
         // Verify it can be found
-        val foundVersion = repository.findBySandboxTemplateIdAndVersionNumber(3L, "3.0.0")
+        val foundVersion = repository.findBySandboxTemplateIdAndVersionNumber(sandboxTemplate1.id, "3.0.0")
         assertNotNull(foundVersion)
         assertEquals(savedVersion.id, foundVersion!!.id)
     }

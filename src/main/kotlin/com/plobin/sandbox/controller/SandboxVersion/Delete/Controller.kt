@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import java.io.File
 
 @RestController("sandboxVersionDeleteController")
 @RequestMapping("/api/sandbox-versions")
@@ -64,5 +65,5 @@ class Controller(private val sandboxVersionRepository: SandboxVersionRepository)
         }
     }
 
-    operator fun invoke(id: Long): Response = deleteSandboxVersion(id)
+    operator fun invoke(id: Long): Response = deleteVersion(id)
 }

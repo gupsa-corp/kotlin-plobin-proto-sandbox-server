@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Table(name = "sandbox_versions")
 data class Entity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0,
 
     @Column(name = "sandbox_id", nullable = false)

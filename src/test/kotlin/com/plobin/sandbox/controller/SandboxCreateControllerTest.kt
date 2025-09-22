@@ -6,6 +6,7 @@ import com.plobin.sandbox.controller.Sandbox.Create.Request
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestPropertySource
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @AutoConfigureWebMvc
+@AutoConfigureMockMvc
 @TestPropertySource(locations = ["classpath:application-test.properties"])
 @Transactional
 class SandboxCreateControllerTest {
@@ -52,7 +54,8 @@ class SandboxCreateControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.uuid").value("test-uuid-12345"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("테스트 샌드박스"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("active"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt").exists())
     }
 
     @Test

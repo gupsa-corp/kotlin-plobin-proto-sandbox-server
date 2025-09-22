@@ -26,7 +26,7 @@ class Util(
         for (templateFolder in templateFolders) {
             // 기존 템플릿 확인
             val existingTemplate = sandboxTemplateRepository
-                .findBySandboxFolderNameAndIsActiveTrue(templateFolder.name)
+                .findBySandboxFolderNameAndIsActive(templateFolder.name, true)
 
             val template = existingTemplate ?: run {
                 // 새 템플릿 생성

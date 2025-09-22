@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Table(name = "sandbox_templates")
 data class Entity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0,
 
     @Column(name = "sandbox_folder_name", nullable = false, length = 255)
@@ -35,8 +35,5 @@ data class Entity(
     val updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "deleted_at")
-    val deletedAt: LocalDateTime? = null,
-
-    @OneToMany(mappedBy = "sandboxTemplate", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val versions: List<com.plobin.sandbox.Repository.SandboxTemplateVersion.Entity> = emptyList()
+    val deletedAt: LocalDateTime? = null
 )
