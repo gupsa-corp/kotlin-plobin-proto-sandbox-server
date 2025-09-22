@@ -1,25 +1,12 @@
 package com.plobin.sandbox.controller.SandboxTemplate.Create
 
-import com.plobin.sandbox.SandboxTemplate.Entity as SandboxTemplate
-import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
-import java.time.LocalDateTime
+import com.plobin.sandbox.service.SandboxTemplate.Create.Service as CreateService
+import org.springframework.web.bind.annotation.RestController
 
-class Controller(private val sandboxTemplateRepository: SandboxTemplateRepository) {
+@RestController
+class Controller(private val createService: CreateService) {
 
-    fun createTemplate(request: Request): Response {
-        val template = SandboxTemplate(
-            sandboxFolderName = request.sandboxFolderName,
-            sandboxFolderPath = request.sandboxFolderPath,
-            sandboxFullFolderPath = request.sandboxFullFolderPath,
-            sandboxStatus = request.sandboxStatus,
-            description = request.description,
-            isActive = request.isActive ?: true,
-            createdAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now()
-        )
-
-        val savedTemplate = sandboxTemplateRepository.save(template)
-
-        return Response.fromEntity(savedTemplate)
+    operator fun invoke(request: Request): Response {
+        return createService(request)
     }
 }
