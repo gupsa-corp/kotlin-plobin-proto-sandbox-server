@@ -1,8 +1,10 @@
 package com.plobin.sandbox.controller.SandboxTemplateVersion.Update
 
 import com.plobin.sandbox.SandboxTemplateVersion.Repository as SandboxTemplateVersionRepository
+import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
 
+@RestController
 class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVersionRepository) {
 
     fun updateVersion(id: Long, request: Request): Response? {

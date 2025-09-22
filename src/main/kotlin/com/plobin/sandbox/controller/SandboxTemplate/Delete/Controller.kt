@@ -1,8 +1,10 @@
 package com.plobin.sandbox.controller.SandboxTemplate.Delete
 
 import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
+import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
 
+@RestController
 class Controller(private val sandboxTemplateRepository: SandboxTemplateRepository) {
 
     fun deleteTemplate(id: Long): Response? {
