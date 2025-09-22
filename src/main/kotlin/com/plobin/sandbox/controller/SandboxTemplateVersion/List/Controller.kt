@@ -1,6 +1,6 @@
 package com.plobin.sandbox.controller.SandboxTemplateVersion.List
 
-import com.plobin.sandbox.repository.SandboxTemplateVersionRepository
+import com.plobin.sandbox.SandboxTemplateVersion.Repository as SandboxTemplateVersionRepository
 
 class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVersionRepository) {
 

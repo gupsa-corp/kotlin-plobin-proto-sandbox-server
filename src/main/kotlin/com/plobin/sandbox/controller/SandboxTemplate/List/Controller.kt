@@ -1,6 +1,6 @@
 package com.plobin.sandbox.controller.SandboxTemplate.List
 
-import com.plobin.sandbox.repository.SandboxTemplateRepository
+import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
 
 class Controller(private val sandboxTemplateRepository: SandboxTemplateRepository) {
 

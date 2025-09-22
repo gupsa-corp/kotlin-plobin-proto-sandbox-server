@@ -1,11 +1,11 @@
-package com.plobin.sandbox.entity
+package com.plobin.sandbox.SandboxTemplate
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "sandbox_templates")
-data class SandboxTemplate(
+data class Entity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -38,5 +38,5 @@ data class SandboxTemplate(
     val deletedAt: LocalDateTime? = null,
 
     @OneToMany(mappedBy = "sandboxTemplate", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val versions: List<SandboxTemplateVersion> = emptyList()
+    val versions: List<com.plobin.sandbox.SandboxTemplateVersion.Entity> = emptyList()
 )

@@ -1,11 +1,11 @@
-package com.plobin.sandbox.entity
+package com.plobin.sandbox.SandboxTemplateVersion
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "sandbox_template_versions")
-data class SandboxTemplateVersion(
+data class Entity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
@@ -30,5 +30,5 @@ data class SandboxTemplateVersion(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sandbox_template_id", insertable = false, updatable = false)
-    val sandboxTemplate: SandboxTemplate? = null
+    val sandboxTemplate: com.plobin.sandbox.SandboxTemplate.Entity? = null
 )
