@@ -7,7 +7,7 @@ import com.plobin.sandbox.controller.SandboxTemplate.Create.Response
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
-@Service
+@Service("sandboxTemplateCreateService")
 class Service(private val sandboxTemplateRepository: SandboxTemplateRepository) {
 
     operator fun invoke(request: Request): Response {

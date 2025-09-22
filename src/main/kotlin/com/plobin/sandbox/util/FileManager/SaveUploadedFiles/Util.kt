@@ -9,7 +9,7 @@ import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
-@Component
+@Component("saveUploadedFilesUtil")
 class Util(private val fileValidationUtil: FileValidationUtil) {
 
     /**

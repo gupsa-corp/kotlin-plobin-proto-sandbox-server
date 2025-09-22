@@ -1,4 +1,4 @@
-package com.plobin.sandbox.config.FileUpload
+package com.plobin.sandbox.Config.FileUpload
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.MultipartConfigFactory

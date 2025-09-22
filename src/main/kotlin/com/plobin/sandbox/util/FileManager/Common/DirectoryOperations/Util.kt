@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import java.nio.file.*
 import java.util.*
 
-@Component
+@Component("directoryOperationsUtil")
 class Util {
 
     /**

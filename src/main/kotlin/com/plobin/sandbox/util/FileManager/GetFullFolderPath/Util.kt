@@ -4,7 +4,7 @@ import com.plobin.sandbox.Config.FileUpload.Config as FileUploadConfig
 import org.springframework.stereotype.Component
 import java.nio.file.Paths
 
-@Component
+@Component("getFullFolderPathUtil")
 class Util(private val fileUploadConfig: FileUploadConfig) {
 
     /**

@@ -32,11 +32,19 @@ server:
 springdoc:
   api-docs:
     path: /api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
+    enabled: true
     operations-sorter: alpha
     tags-sorter: alpha
+    doc-expansion: none
+    disable-swagger-default-url: true
+    display-request-duration: true
+    try-it-out-enabled: true
   show-actuator: false
+  paths-to-match: /api/**
+  packages-to-scan: com.plobin.sandbox.controller
 
 # 애플리케이션 설정
 app:
@@ -44,6 +52,9 @@ app:
     base-path: ./Assets/sandbox-templates
     max-file-size: 50MB
     max-request-size: 100MB
+  data-seeding:
+    enabled: true
+    scan-on-startup: true
 
 logging:
   level:

@@ -3,7 +3,7 @@ package com.plobin.sandbox.util.FileManager.Common.FileValidation
 import com.plobin.sandbox.Config.FileUpload.Config as FileUploadConfig
 import org.springframework.stereotype.Component
 
-@Component
+@Component("fileValidationUtil")
 class Util(private val fileUploadConfig: FileUploadConfig) {
 
     /**

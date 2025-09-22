@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import java.nio.file.Files
 import java.nio.file.Paths
 
-@Component
+@Component("backupExistingReleaseUtil")
 class Util(
     private val fileUploadConfig: FileUploadConfig,
     private val directoryOperationsUtil: DirectoryOperationsUtil,
