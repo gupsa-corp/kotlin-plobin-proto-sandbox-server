@@ -1,18 +1,49 @@
 package com.plobin.sandbox.controller.SandboxTemplateVersion.Delete
 
 import com.plobin.sandbox.Repository.SandboxTemplateVersion.Repository as SandboxTemplateVersionRepository
-import org.springframework.web.bind.annotation.RestController
+import com.plobin.sandbox.Config.Swagger.Annotations.ResourceNames
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 
 @RestController("sandboxTemplateVersionDeleteController")
+@RequestMapping("/api/sandbox-template-versions")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Sandbox Template Version", description = "샌드박스 템플릿 버전 관리 API")
 class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVersionRepository) {
 
-    fun deleteVersion(id: Long): Response? {
+    @Operation(
+        summary = "${ResourceNames.SANDBOX_TEMPLATE_VERSION} 삭제",
+        description = "특정 ID의 ${ResourceNames.SANDBOX_TEMPLATE_VERSION}을 삭제합니다."
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "성공적으로 삭제됨",
+                content = [Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = Schema(implementation = Response::class)
+                )]
+            ),
+            ApiResponse(responseCode = "404", description = "템플릿 버전을 찾을 수 없음"),
+            ApiResponse(responseCode = "500", description = "서버 오류")
+        ]
+    )
+    @DeleteMapping("/{id}")
+    fun deleteVersion(
+        @Parameter(description = "템플릿 버전 ID", required = true)
+        @PathVariable("id") id: Long
+    ): ResponseEntity<Response> {
         val existingVersion = sandboxTemplateVersionRepository.findById(id).orElse(null)
+            ?: return ResponseEntity.notFound().build()
 
-        return existingVersion?.let { version ->
-            sandboxTemplateVersionRepository.deleteById(id)
-
-            Response.fromDeletedEntity(version)
-        }
+        sandboxTemplateVersionRepository.deleteById(id)
+        return ResponseEntity.ok(Response.fromDeletedEntity(existingVersion))
     }
 }
