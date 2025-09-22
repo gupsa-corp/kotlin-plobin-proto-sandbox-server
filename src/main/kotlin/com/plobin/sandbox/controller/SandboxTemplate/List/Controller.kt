@@ -1,9 +1,10 @@
 package com.plobin.sandbox.controller.SandboxTemplate.List
 
-import com.plobin.sandbox.Config.Swagger.Annotations.Operations
 import com.plobin.sandbox.Config.Swagger.Annotations.CommonResponses
 import com.plobin.sandbox.Config.Swagger.Annotations.Tags
+import com.plobin.sandbox.Config.Swagger.Annotations.ResourceNames
 import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController
 @get:Tags.SandboxTemplate
 class Controller(private val sandboxTemplateRepository: SandboxTemplateRepository) {
 
-    @get:Operations.SandboxTemplateList
+    @Operation(
+        summary = "${ResourceNames.SANDBOX_TEMPLATE} 목록 조회",
+        description = "삭제되지 않은 모든 ${ResourceNames.SANDBOX_TEMPLATE}의 목록을 조회합니다."
+    )
     @get:CommonResponses.StandardSuccess
     @GetMapping
     fun listTemplates(): List<Response> {
