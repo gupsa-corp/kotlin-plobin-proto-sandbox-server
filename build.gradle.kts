@@ -39,6 +39,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("org.testcontainers:junit-jupiter:1.19.3")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {
