@@ -1,6 +1,6 @@
 package com.plobin.sandbox.controller.SandboxTemplate.Delete
 
-import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
+import com.plobin.sandbox.Repository.SandboxTemplate.Repository as SandboxTemplateRepository
 import java.time.LocalDateTime
 
 class Controller(private val sandboxTemplateRepository: SandboxTemplateRepository) {

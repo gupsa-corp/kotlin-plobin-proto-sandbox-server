@@ -1,7 +1,7 @@
 package com.plobin.sandbox.controller.SandboxTemplate.Create
 
-import com.plobin.sandbox.SandboxTemplate.Entity as SandboxTemplate
-import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
+import com.plobin.sandbox.Repository.SandboxTemplate.Entity as SandboxTemplate
+import com.plobin.sandbox.Repository.SandboxTemplate.Repository as SandboxTemplateRepository
 import java.time.LocalDateTime
 
 class Controller(private val sandboxTemplateRepository: SandboxTemplateRepository) {
