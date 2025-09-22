@@ -206,6 +206,22 @@ use RefreshDatabase, WithFaker;  // 필수 트레이트
 
 **콜백 관리**: 최대 5회 재시도 (즉시, 1분, 3분, 15분, 30분 간격), `plobin_document_summary_callback_request_records` 테이블로 상세 추적
 
+### Sandbox Template 관리 시스템
+**구현된 도메인들**
+- `SandboxTemplate/{Entity|Repository}.kt`: 샌드박스 템플릿 기본 관리
+- `SandboxTemplateVersion/{Entity|Repository}.kt`: 템플릿 버전 관리
+- `controller/SandboxTemplate/{List|Get|Create|Update|Delete}/`: 템플릿 CRUD 작업
+- `controller/SandboxTemplateVersion/{List|Get|Create|Update|Delete}/`: 버전 CRUD 작업
+
+**데이터베이스 테이블**
+- `sandbox_templates`: 폴더 경로, 상태, 설명, 활성화 여부 관리
+- `sandbox_template_versions`: 버전명, 번호, 설명 관리 (템플릿별 다중 버전)
+
+**주요 기능**
+- 소프트 삭제: templates 테이블은 deleted_at 필드로 논리 삭제
+- 템플릿 활성화: is_active 필드로 템플릿 레벨 활성화 제어
+- 버전 관리: 템플릿당 여러 버전 생성 및 관리 가능
+
 ## 개발 가이드라인
 
 ### 일반 규칙
@@ -256,6 +272,14 @@ use RefreshDatabase, WithFaker;  // 필수 트레이트
 - **코드 예제**: 코드 블록 넣지 말 것 (구현 사례 제외)
 - **더미 값**: 요청 외 예시나 더미 데이터 금지
 - **메타 정보**: 업데이트 날짜, 작성자, 참고자료 등 금지
+
+### Kotlin 프로젝트 구조
+- 도메인별 그룹화: `{도메인}/Entity.kt`, `{도메인}/Repository.kt` 구조 사용
+- 컨트롤러 구조: `controller/{도메인}/{액션}/{Controller|Request|Response}.kt`
+- 1파일 1메서드 원칙: 각 컨트롤러 파일은 단일 메서드만 포함
+- 패키지 구조: `com.plobin.sandbox.{도메인}` 형태로 도메인별 분리
+- Entity 클래스명: 도메인 폴더 내에서 `Entity.kt`로 통일
+- Repository 클래스명: 도메인 폴더 내에서 `Repository.kt`로 통일
 
 ## 개발 문서 생성
 - php artisan scribe:generate
