@@ -8,4 +8,7 @@ interface Repository : JpaRepository<Entity, Long> {
     fun findBySandboxTemplateId(sandboxTemplateId: Long): List<Entity>
     fun findByVersionNameContaining(versionName: String): List<Entity>
     fun findBySandboxTemplateIdOrderByCreatedAtDesc(sandboxTemplateId: Long): List<Entity>
+
+    // 업로드 서비스를 위한 추가 메서드
+    fun findBySandboxTemplateIdAndVersionNumber(sandboxTemplateId: Long, versionNumber: String): Entity?
 }

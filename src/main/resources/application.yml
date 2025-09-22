@@ -14,6 +14,16 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.community.dialect.SQLiteDialect
+
+  # 파일 업로드 설정
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+      file-size-threshold: 2KB
+      location: /tmp
+
   main:
     allow-bean-definition-overriding: true # Controller.kt 와 같은 통일된 이름을 가지기 위해 설정
 server:
@@ -27,6 +37,13 @@ springdoc:
     operations-sorter: alpha
     tags-sorter: alpha
   show-actuator: false
+
+# 애플리케이션 설정
+app:
+  upload:
+    base-path: ./Assets/sandbox-templates
+    max-file-size: 50MB
+    max-request-size: 100MB
 
 logging:
   level:

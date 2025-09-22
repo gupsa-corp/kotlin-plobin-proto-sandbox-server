@@ -32,6 +32,12 @@ dependencies {
     // Swagger dependencies
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
+    // File processing dependencies
+    implementation("org.apache.commons:commons-compress:1.26.0")
+
+    // Validation dependencies
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

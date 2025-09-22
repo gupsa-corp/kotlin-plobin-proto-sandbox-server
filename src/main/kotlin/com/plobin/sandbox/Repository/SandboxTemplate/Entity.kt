@@ -3,7 +3,7 @@ package com.plobin.sandbox.Repository.SandboxTemplate
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
-@Entity(name = "SandboxTemplate")
+@jakarta.persistence.Entity(name = "SandboxTemplate")
 @Table(name = "sandbox_templates")
 data class Entity(
     @Id
