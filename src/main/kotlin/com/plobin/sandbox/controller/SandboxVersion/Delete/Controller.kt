@@ -43,7 +43,26 @@ class Controller(private val sandboxVersionRepository: SandboxVersionRepository)
         val entity = sandboxVersionRepository.findById(id).orElse(null)
             ?: throw SandboxVersionException.notFound(id)
 
+        // 1. 물리 파일 삭제
+        deletePhysicalFiles(entity.versionPath)
+
+        // 2. 데이터베이스에서 버전 삭제
         sandboxVersionRepository.delete(entity)
+
         return Response.fromEntity(entity)
     }
+
+    private fun deletePhysicalFiles(versionPath: String) {
+        try {
+            val folder = File(versionPath)
+            if (folder.exists() && folder.isDirectory) {
+                folder.deleteRecursively()
+            }
+        } catch (e: Exception) {
+            // 파일 삭제 실패는 로그만 남기고 계속 진행
+            println("버전 파일 삭제 실패: ${versionPath}, 에러: ${e.message}")
+        }
+    }
+
+    operator fun invoke(id: Long): Response = deleteSandboxVersion(id)
 }

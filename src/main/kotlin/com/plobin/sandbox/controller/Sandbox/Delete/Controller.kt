@@ -1,6 +1,7 @@
 package com.plobin.sandbox.controller.Sandbox.Delete
 
 import com.plobin.sandbox.Repository.Sandbox.Repository as SandboxRepository
+import com.plobin.sandbox.Repository.SandboxVersion.Repository as SandboxVersionRepository
 import com.plobin.sandbox.Exception.Sandbox.Exception as SandboxException
 import com.plobin.sandbox.Config.Swagger.Annotations.ResourceNames
 import io.swagger.v3.oas.annotations.Operation
@@ -44,12 +45,30 @@ class Controller(private val sandboxRepository: SandboxRepository) {
         val entity = sandboxRepository.findByIdAndDeletedAtIsNull(id)
             ?: throw SandboxException.notFound(id)
 
-        val deletedEntity = entity.copy(
-            deletedAt = LocalDateTime.now(),
-            updatedAt = LocalDateTime.now()
-        )
+        // 1. 물리 파일 삭제
+        deletePhysicalFiles(entity.folderPath)
 
-        sandboxRepository.save(deletedEntity)
-        return Response.fromEntity(deletedEntity)
+        // 2. 관련된 모든 버전 삭제
+        val versions = sandboxVersionRepository.findBySandboxId(id)
+        sandboxVersionRepository.deleteAll(versions)
+
+        // 3. 샌드박스 완전 삭제
+        sandboxRepository.delete(entity)
+
+        return Response.fromEntity(entity)
     }
+
+    private fun deletePhysicalFiles(folderPath: String) {
+        try {
+            val folder = File(folderPath)
+            if (folder.exists() && folder.isDirectory) {
+                folder.deleteRecursively()
+            }
+        } catch (e: Exception) {
+            // 파일 삭제 실패는 로그만 남기고 계속 진행
+            println("파일 삭제 실패: ${folderPath}, 에러: ${e.message}")
+        }
+    }
+
+    operator fun invoke(id: Long): Response = deleteSandbox(id)
 }

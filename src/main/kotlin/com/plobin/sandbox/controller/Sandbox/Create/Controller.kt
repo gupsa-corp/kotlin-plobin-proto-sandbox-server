@@ -16,6 +16,8 @@ import java.time.LocalDateTime
 @RestController("sandboxCreateController")
 @RequestMapping("/api/sandboxes")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "Sandbox", description = "샌드박스 관리 API")
+@RequestMapping("/api/sandboxes")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Sandbox", description = "샌드박스 관리 API")
 class Controller(private val sandboxRepository: SandboxRepository) {
 
     @Operation(
@@ -55,4 +57,6 @@ class Controller(private val sandboxRepository: SandboxRepository) {
         val savedEntity = sandboxRepository.save(entity)
         return Response.fromEntity(savedEntity)
     }
+
+    operator fun invoke(request: Request): Response = createSandbox(request)
 }

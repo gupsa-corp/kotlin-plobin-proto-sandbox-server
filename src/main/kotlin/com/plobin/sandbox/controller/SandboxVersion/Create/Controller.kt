@@ -53,4 +53,6 @@ class Controller(private val sandboxVersionRepository: SandboxVersionRepository)
         val savedEntity = sandboxVersionRepository.save(entity)
         return Response.fromEntity(savedEntity)
     }
+
+    operator fun invoke(request: Request): Response = createSandboxVersion(request)
 }
