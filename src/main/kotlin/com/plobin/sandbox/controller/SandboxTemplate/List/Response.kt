@@ -33,7 +33,7 @@ data class Response(
     val updatedAt: LocalDateTime
 ) {
     companion object {
-        fun fromEntity(entity: com.plobin.sandbox.SandboxTemplate.Entity): Response {
+        fun fromEntity(entity: com.plobin.sandbox.Repository.SandboxTemplate.Entity): Response {
             return Response(
                 id = entity.id,
                 sandboxFolderName = entity.sandboxFolderName,

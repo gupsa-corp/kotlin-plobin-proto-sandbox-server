@@ -1,9 +1,9 @@
-package com.plobin.sandbox.SandboxTemplateVersion
+package com.plobin.sandbox.Repository.SandboxTemplateVersion
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
-@Repository
+@Repository("sandboxTemplateVersionRepository")
 interface Repository : JpaRepository<Entity, Long> {
     fun findBySandboxTemplateId(sandboxTemplateId: Long): List<Entity>
     fun findByVersionNameContaining(versionName: String): List<Entity>

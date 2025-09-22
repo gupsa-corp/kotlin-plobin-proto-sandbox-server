@@ -1,7 +1,7 @@
 package com.plobin.sandbox.service.SandboxTemplate.Create
 
-import com.plobin.sandbox.SandboxTemplate.Entity as SandboxTemplate
-import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
+import com.plobin.sandbox.Repository.SandboxTemplate.Entity as SandboxTemplate
+import com.plobin.sandbox.Repository.SandboxTemplate.Repository as SandboxTemplateRepository
 import com.plobin.sandbox.controller.SandboxTemplate.Create.Request
 import com.plobin.sandbox.controller.SandboxTemplate.Create.Response
 import org.springframework.stereotype.Service

@@ -14,7 +14,8 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.community.dialect.SQLiteDialect
-
+  main:
+    allow-bean-definition-overriding: true # Controller.kt 와 같은 통일된 이름을 가지기 위해 설정
 server:
   port: 8080
 

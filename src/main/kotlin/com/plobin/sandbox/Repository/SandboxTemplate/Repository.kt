@@ -1,9 +1,9 @@
-package com.plobin.sandbox.SandboxTemplate
+package com.plobin.sandbox.Repository.SandboxTemplate
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
-@Repository
+@Repository("sandboxTemplateRepository")
 interface Repository : JpaRepository<Entity, Long> {
     fun findByDeletedAtIsNull(): List<Entity>
     fun findByDeletedAtIsNullAndSandboxStatus(sandboxStatus: String): List<Entity>

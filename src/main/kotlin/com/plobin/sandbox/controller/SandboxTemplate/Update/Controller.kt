@@ -1,10 +1,10 @@
 package com.plobin.sandbox.controller.SandboxTemplate.Update
 
-import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
+import com.plobin.sandbox.Repository.SandboxTemplate.Repository as SandboxTemplateRepository
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
 
-@RestController
+@RestController("sandboxTemplateUpdateController")
 class Controller(private val sandboxTemplateRepository: SandboxTemplateRepository) {
 
     fun updateTemplate(id: Long, request: Request): Response? {

@@ -8,7 +8,7 @@ data class Response(
     val deletedAt: LocalDateTime
 ) {
     companion object {
-        fun fromDeletedEntity(entity: com.plobin.sandbox.SandboxTemplate.Entity, message: String = "Template successfully deleted"): Response {
+        fun fromDeletedEntity(entity: com.plobin.sandbox.Repository.SandboxTemplate.Entity, message: String = "Template successfully deleted"): Response {
             return Response(
                 id = entity.id,
                 message = message,

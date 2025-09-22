@@ -7,7 +7,7 @@ data class Response(
     val versionNumber: String
 ) {
     companion object {
-        fun fromDeletedEntity(entity: com.plobin.sandbox.SandboxTemplateVersion.Entity, message: String = "Version successfully deleted"): Response {
+        fun fromDeletedEntity(entity: com.plobin.sandbox.Repository.SandboxTemplateVersion.Entity, message: String = "Version successfully deleted"): Response {
             return Response(
                 id = entity.id,
                 message = message,
