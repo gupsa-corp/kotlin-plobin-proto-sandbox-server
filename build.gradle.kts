@@ -29,6 +29,9 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.44.1.0")
     implementation("org.hibernate.orm:hibernate-community-dialects:6.4.0.Final")
 
+    // Swagger dependencies
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
