@@ -1,21 +1,11 @@
 package com.plobin.sandbox.controller.SandboxTemplateVersion.List
 
-import com.plobin.sandbox.Repository.SandboxTemplateVersion.Repository as SandboxTemplateVersionRepository
+import com.plobin.sandbox.SandboxTemplateVersion.Repository as SandboxTemplateVersionRepository
 
 class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVersionRepository) {
 
     fun listVersions(): List<Response> {
         val versions = sandboxTemplateVersionRepository.findAll()
-        return versions.map { version ->
-            Response(
-                id = version.id,
-                sandboxTemplateId = version.sandboxTemplateId,
-                versionName = version.versionName,
-                versionNumber = version.versionNumber,
-                description = version.description,
-                createdAt = version.createdAt,
-                updatedAt = version.updatedAt
-            )
-        }
+        return versions.map { Response.fromEntity(it) }
     }
 }

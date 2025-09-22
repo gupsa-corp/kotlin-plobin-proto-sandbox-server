@@ -1,6 +1,6 @@
 package com.plobin.sandbox.controller.SandboxTemplate.Update
 
-import com.plobin.sandbox.Repository.SandboxTemplate.Repository as SandboxTemplateRepository
+import com.plobin.sandbox.SandboxTemplate.Repository as SandboxTemplateRepository
 import java.time.LocalDateTime
 
 class Controller(private val sandboxTemplateRepository: SandboxTemplateRepository) {
@@ -21,17 +21,7 @@ class Controller(private val sandboxTemplateRepository: SandboxTemplateRepositor
 
             val savedTemplate = sandboxTemplateRepository.save(updatedTemplate)
 
-            Response(
-                id = savedTemplate.id,
-                sandboxFolderName = savedTemplate.sandboxFolderName,
-                sandboxFolderPath = savedTemplate.sandboxFolderPath,
-                sandboxFullFolderPath = savedTemplate.sandboxFullFolderPath,
-                sandboxStatus = savedTemplate.sandboxStatus,
-                description = savedTemplate.description,
-                isActive = savedTemplate.isActive,
-                createdAt = savedTemplate.createdAt,
-                updatedAt = savedTemplate.updatedAt
-            )
+            Response.fromEntity(savedTemplate)
         }
     }
 }

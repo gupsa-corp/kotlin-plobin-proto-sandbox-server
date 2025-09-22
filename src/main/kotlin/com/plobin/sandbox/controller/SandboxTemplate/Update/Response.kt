@@ -12,4 +12,20 @@ data class Response(
     val isActive: Boolean,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
-)
+) {
+    companion object {
+        fun fromEntity(entity: com.plobin.sandbox.SandboxTemplate.Entity): Response {
+            return Response(
+                id = entity.id,
+                sandboxFolderName = entity.sandboxFolderName,
+                sandboxFolderPath = entity.sandboxFolderPath,
+                sandboxFullFolderPath = entity.sandboxFullFolderPath,
+                sandboxStatus = entity.sandboxStatus,
+                description = entity.description,
+                isActive = entity.isActive,
+                createdAt = entity.createdAt,
+                updatedAt = entity.updatedAt
+            )
+        }
+    }
+}

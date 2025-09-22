@@ -5,4 +5,15 @@ data class Response(
     val message: String,
     val versionName: String,
     val versionNumber: String
-)
+) {
+    companion object {
+        fun fromDeletedEntity(entity: com.plobin.sandbox.SandboxTemplateVersion.Entity, message: String = "Version successfully deleted"): Response {
+            return Response(
+                id = entity.id,
+                message = message,
+                versionName = entity.versionName,
+                versionNumber = entity.versionNumber
+            )
+        }
+    }
+}

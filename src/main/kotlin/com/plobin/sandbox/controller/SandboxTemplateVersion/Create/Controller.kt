@@ -1,7 +1,7 @@
 package com.plobin.sandbox.controller.SandboxTemplateVersion.Create
 
-import com.plobin.sandbox.Repository.SandboxTemplateVersion.Entity as SandboxTemplateVersion
-import com.plobin.sandbox.Repository.SandboxTemplateVersion.Repository as SandboxTemplateVersionRepository
+import com.plobin.sandbox.SandboxTemplateVersion.Entity as SandboxTemplateVersion
+import com.plobin.sandbox.SandboxTemplateVersion.Repository as SandboxTemplateVersionRepository
 import java.time.LocalDateTime
 
 class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVersionRepository) {
@@ -18,14 +18,6 @@ class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVe
 
         val savedVersion = sandboxTemplateVersionRepository.save(version)
 
-        return Response(
-            id = savedVersion.id,
-            sandboxTemplateId = savedVersion.sandboxTemplateId,
-            versionName = savedVersion.versionName,
-            versionNumber = savedVersion.versionNumber,
-            description = savedVersion.description,
-            createdAt = savedVersion.createdAt,
-            updatedAt = savedVersion.updatedAt
-        )
+        return Response.fromEntity(savedVersion)
     }
 }
