@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 
 @RestController("sandboxTemplateVersionCreateController")
 @RequestMapping("/api/sandbox-template-versions")
-@io.swagger.v3.oas.annotations.tags.Tag(name = "SandboxTemplateVersion", description = "샌드박스 템플릿 버전 관리 API")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Sandbox Template Version", description = "샌드박스 템플릿 버전 관리 API")
 class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVersionRepository) {
 
     @Operation(

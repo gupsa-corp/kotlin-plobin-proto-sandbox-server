@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.web.bind.annotation.*
 
 @RestController("sandboxTemplateVersionListController")
-@RequestMapping("/api/sandbox-template-versions")
+@RequestMapping("/api/sandbox-templates")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "Sandbox Template Version", description = "샌드박스 템플릿 버전 관리 API")
 class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVersionRepository) {
 
@@ -23,7 +23,7 @@ class Controller(private val sandboxTemplateVersionRepository: SandboxTemplateVe
             ApiResponse(responseCode = "500", description = "서버 오류")
         ]
     )
-    @GetMapping("/{templateId}")
+    @GetMapping("/{templateId}/versions")
     fun listVersions(
         @Parameter(description = "템플릿 ID", required = true)
         @PathVariable templateId: Long
