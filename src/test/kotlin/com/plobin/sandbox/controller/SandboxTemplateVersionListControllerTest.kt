@@ -23,8 +23,9 @@ class SandboxTemplateVersionListControllerTest {
     }
 
     @Test
-    fun `리포지터리에_데이터가_있을때_전체_버전_목록_반환을_테스트한다`() {
+    fun `특정_템플릿의_버전_목록_반환을_테스트한다`() {
         // Given
+        val templateId = 10L
         val entities = listOf(
             SandboxTemplateVersionEntity(
                 id = 1L,
@@ -43,27 +44,18 @@ class SandboxTemplateVersionListControllerTest {
                 description = "Feature update",
                 createdAt = LocalDateTime.of(2024, 1, 15, 14, 30),
                 updatedAt = LocalDateTime.of(2024, 1, 15, 14, 30)
-            ),
-            SandboxTemplateVersionEntity(
-                id = 3L,
-                sandboxTemplateId = 20L,
-                versionName = "v2.0.0",
-                versionNumber = "2.0.0",
-                description = null,
-                createdAt = LocalDateTime.of(2024, 2, 1, 9, 0),
-                updatedAt = LocalDateTime.of(2024, 2, 1, 9, 0)
             )
         )
 
-        every { repository.findAll() } returns entities
+        every { repository.findBySandboxTemplateId(templateId) } returns entities
 
         // When
-        val responses = controller.listVersions()
+        val responses = controller.listVersions(templateId)
 
         // Then
-        verify(exactly = 1) { repository.findAll() }
+        verify(exactly = 1) { repository.findBySandboxTemplateId(templateId) }
 
-        assertEquals(3, responses.size)
+        assertEquals(2, responses.size)
 
         // Verify first entity mapping
         with(responses[0]) {
@@ -84,33 +76,26 @@ class SandboxTemplateVersionListControllerTest {
             assertEquals("1.1.0", versionNumber)
             assertEquals("Feature update", description)
         }
-
-        // Verify third entity mapping with null description
-        with(responses[2]) {
-            assertEquals(3L, id)
-            assertEquals(20L, sandboxTemplateId)
-            assertEquals("v2.0.0", versionName)
-            assertEquals("2.0.0", versionNumber)
-            assertNull(description)
-        }
     }
 
     @Test
-    fun `리포지터리가_비어있을때_빈_리스트_반환을_테스트한다`() {
+    fun `템플릿에_버전이_없을때_빈_리스트_반환을_테스트한다`() {
         // Given
-        every { repository.findAll() } returns emptyList()
+        val templateId = 99L
+        every { repository.findBySandboxTemplateId(templateId) } returns emptyList()
 
         // When
-        val responses = controller.listVersions()
+        val responses = controller.listVersions(templateId)
 
         // Then
-        verify(exactly = 1) { repository.findAll() }
+        verify(exactly = 1) { repository.findBySandboxTemplateId(templateId) }
         assertTrue(responses.isEmpty())
     }
 
     @Test
-    fun `단일_엔티티_처리를_테스트한다`() {
+    fun `단일_버전_처리를_테스트한다`() {
         // Given
+        val templateId = 5L
         val singleEntity = SandboxTemplateVersionEntity(
             id = 100L,
             sandboxTemplateId = 5L,
@@ -121,13 +106,13 @@ class SandboxTemplateVersionListControllerTest {
             updatedAt = LocalDateTime.of(2024, 1, 12, 16, 20)
         )
 
-        every { repository.findAll() } returns listOf(singleEntity)
+        every { repository.findBySandboxTemplateId(templateId) } returns listOf(singleEntity)
 
         // When
-        val responses = controller.listVersions()
+        val responses = controller.listVersions(templateId)
 
         // Then
-        verify(exactly = 1) { repository.findAll() }
+        verify(exactly = 1) { repository.findBySandboxTemplateId(templateId) }
 
         assertEquals(1, responses.size)
 
@@ -145,6 +130,7 @@ class SandboxTemplateVersionListControllerTest {
     @Test
     fun `리포지터리_순서_보존을_테스트한다`() {
         // Given
+        val templateId = 1L
         val entities = listOf(
             SandboxTemplateVersionEntity(
                 id = 3L,
@@ -175,13 +161,13 @@ class SandboxTemplateVersionListControllerTest {
             )
         )
 
-        every { repository.findAll() } returns entities
+        every { repository.findBySandboxTemplateId(templateId) } returns entities
 
         // When
-        val responses = controller.listVersions()
+        val responses = controller.listVersions(templateId)
 
         // Then
-        verify(exactly = 1) { repository.findAll() }
+        verify(exactly = 1) { repository.findBySandboxTemplateId(templateId) }
 
         assertEquals(3, responses.size)
         assertEquals(3L, responses[0].id)
