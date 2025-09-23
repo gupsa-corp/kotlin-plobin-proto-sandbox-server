@@ -21,7 +21,7 @@ class Controller(
     @Operation(summary = "SSH 연결 초기화", description = "SSH 서버에 연결하고 WebSocket URL을 반환합니다")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "2", description = "SSH 연결 성공"),
+            ApiResponse(responseCode = "200", description = "SSH 연결 성공"),
             ApiResponse(responseCode = "400", description = "SSH 연결 실패"),
             ApiResponse(responseCode = "500", description = "서버 오류")
         ]
