@@ -38,6 +38,12 @@ dependencies {
     // Validation dependencies
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
+    // SSH dependencies
+    implementation("com.jcraft:jsch:0.1.55")
+
+    // WebSocket dependencies
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("com.ninja-squad:springmockk:4.0.2")

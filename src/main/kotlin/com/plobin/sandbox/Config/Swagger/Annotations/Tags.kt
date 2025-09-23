@@ -15,4 +15,7 @@ object Tags {
 
     @get:Tag(name = "Sandbox Version", description = "샌드박스 버전 관리 API")
     val SandboxVersion = Unit
+
+    @get:Tag(name = "SSH", description = "SSH 터미널 연결 관리 API")
+    val SSH = Unit
 }
