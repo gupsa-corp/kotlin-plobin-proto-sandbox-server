@@ -161,20 +161,23 @@ class SSHTerminalController {
         }
 
         try {
+            console.log("1111111")
             // WebSocket 연결 해제
             window.sshClient.disconnect();
-
+            console.log("2222222")
             // SSH API 호출하여 서버 측 연결 해제
             await window.sshApi.disconnect(this.currentSessionId);
 
+            console.log("3333333")
             this.currentSessionId = null;
             this.currentConnection = null;
             this.isConnected = false;
 
             // 연결 정보 지우기
             window.terminalHandler.clearConnectionInfo();
+            console.log("4444444")
             window.terminalHandler.writeMessage('SSH 연결이 해제되었습니다.', 'info');
-
+            console.log("5555555")
             console.log('SSH 연결 해제 완료');
 
         } catch (error) {
