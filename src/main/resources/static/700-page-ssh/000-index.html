@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH Terminal</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- xterm.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
+
+    <!-- Custom CSS -->
+    <style>
+        .terminal-wrapper {
+            height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-disconnected { background-color: #dc3545; }
+        .status-connecting { background-color: #ffc107; }
+        .status-connected { background-color: #198754; }
+        .status-error { background-color: #fd7e14; }
+
+        .terminal-container {
+            flex: 1;
+            padding: 10px;
+            background: #1e1e1e;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Plobin SSH Terminal</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#sshConnectionModal">
+                    <i class="bi bi-plus-circle"></i> 새 연결
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-12">
+                <!-- Terminal Container -->
+                <div class="terminal-wrapper">
+                    <div class="terminal-header">
+                        <div class="connection-status">
+                            <span id="status-indicator" class="status-indicator status-disconnected"></span>
+                            <span id="status-text">연결 대기 중</span>
+                            <span id="connection-info" class="text-muted ms-2"></span>
+                        </div>
+                        <div class="terminal-controls">
+                            <button id="btn-connect" class="btn btn-success btn-sm">연결</button>
+                            <button id="btn-disconnect" class="btn btn-danger btn-sm" disabled>해제</button>
+                            <button id="btn-clear" class="btn btn-secondary btn-sm">지우기</button>
+                            <button id="btn-fullscreen" class="btn btn-outline-secondary btn-sm">전체화면</button>
+                        </div>
+                    </div>
+                    <div id="terminal" class="terminal-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SSH Connection Modal -->
+    <div class="modal fade" id="sshConnectionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">SSH 연결 설정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="ssh-connection-form">
+                        <div class="mb-3">
+                            <label for="ssh-host" class="form-label">호스트</label>
+                            <input type="text" class="form-control" id="ssh-host" value="192.168.1.117" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ssh-port" class="form-label">포트</label>
+                            <input type="number" class="form-control" id="ssh-port" value="22" min="1" max="65535" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ssh-username" class="form-label">사용자명</label>
+                            <input type="text" class="form-control" id="ssh-username" value="gupsa" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ssh-password" class="form-label">비밀번호</label>
+                            <input type="password" class="form-control" id="ssh-password" placeholder="비밀번호" required>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="save-connection">
+                                <label class="form-check-label" for="save-connection">
+                                    연결 정보 저장 (로컬 스토리지)
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" id="btn-connect-ssh">
+                        <span id="connect-spinner" class="spinner-border spinner-border-sm d-none me-1"></span>
+                        연결
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- xterm.js -->
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-web-links@0.9.0/lib/xterm-addon-web-links.js"></script>
+
+    <!-- Custom Scripts -->
+    <script src="/700-page-ssh/500-api-client.js"></script>
+    <script src="/700-page-ssh/400-websocket-client.js"></script>
+    <script src="/700-page-ssh/400-terminal-handler.js"></script>
+    <script src="/700-page-ssh/400-main-controller.js"></script>
+</body>
+</html>
