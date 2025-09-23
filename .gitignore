@@ -37,10 +37,10 @@ out/
 .vscode/
 
 ### SQLite ###
-*.db
-*.sqlite
-*.sqlite3
-data/
+# *.db
+# *.sqlite
+# *.sqlite3
+# data/
 
 ### Logs ###
 logs/
