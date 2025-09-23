@@ -2,7 +2,6 @@ package com.plobin.sandbox.service.Ssh.ConnectionManager
 
 import com.jcraft.jsch.ChannelShell
 import com.jcraft.jsch.JSch
-import com.jcraft.jsch.Session
 import com.plobin.sandbox.Exception.Ssh.Connection.Exception
 import com.plobin.sandbox.model.Ssh.Connection
 import com.plobin.sandbox.model.Ssh.SessionInfo
@@ -11,13 +10,29 @@ import org.springframework.stereotype.Service
 import org.springframework.web.socket.WebSocketSession
 import java.time.LocalDateTime
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
+import java.time.Duration
 
 @Service("sshConnectionManagerService")
 class Service {
-    private val activeConnections = ConcurrentHashMap<String, Connection>()
-    private val sessionToConnectionMap = ConcurrentHashMap<String, String>()
-    private val sessionInfoMap = ConcurrentHashMap<String, SessionInfo>()
+    private val activeConnections: Cache<String, Connection> = Caffeine.newBuilder()
+        .maximumSize(1000)
+        .expireAfterWrite(Duration.ofMinutes(30))
+        .expireAfterAccess(Duration.ofMinutes(5))
+        .build()
+
+    private val sessionToConnectionMap: Cache<String, String> = Caffeine.newBuilder()
+        .maximumSize(1000)
+        .expireAfterWrite(Duration.ofMinutes(30))
+        .expireAfterAccess(Duration.ofMinutes(5))
+        .build()
+
+    private val sessionInfoMap: Cache<String, SessionInfo> = Caffeine.newBuilder()
+        .maximumSize(1000)
+        .expireAfterWrite(Duration.ofMinutes(30))
+        .expireAfterAccess(Duration.ofMinutes(5))
+        .build()
 
     fun createConnection(sessionId: String, host: String, port: Int, username: String, password: String): Connection {
         try {
@@ -46,8 +61,8 @@ class Service {
                 isActive = true
             )
 
-            activeConnections[connectionId] = connection
-            sessionToConnectionMap[sessionId] = connectionId
+            activeConnections.put(connectionId, connection)
+            sessionToConnectionMap.put(sessionId, connectionId)
 
             return connection
         } catch (e: Exception) {
@@ -56,30 +71,30 @@ class Service {
     }
 
     fun getConnection(sessionId: String): Connection? {
-        val connectionId = sessionToConnectionMap[sessionId] ?: return null
-        return activeConnections[connectionId]?.also {
+        val connectionId = sessionToConnectionMap.getIfPresent(sessionId) ?: return null
+        return activeConnections.getIfPresent(connectionId)?.also {
             it.lastActivity = LocalDateTime.now()
         }
     }
 
     fun addWebSocketSession(sessionId: String, webSocketSession: WebSocketSession) {
-        val connectionId = sessionToConnectionMap[sessionId] ?: return
+        val connectionId = sessionToConnectionMap.getIfPresent(sessionId) ?: return
         val sessionInfo = SessionInfo(
             sessionId = sessionId,
             connectionId = connectionId,
             webSocketSession = webSocketSession,
             createdAt = LocalDateTime.now()
         )
-        sessionInfoMap[sessionId] = sessionInfo
+        sessionInfoMap.put(sessionId, sessionInfo)
     }
 
     fun getWebSocketSession(sessionId: String): WebSocketSession? {
-        return sessionInfoMap[sessionId]?.webSocketSession
+        return sessionInfoMap.getIfPresent(sessionId)?.webSocketSession
     }
 
     fun removeConnection(sessionId: String) {
-        val connectionId = sessionToConnectionMap[sessionId] ?: return
-        val connection = activeConnections[connectionId]
+        val connectionId = sessionToConnectionMap.getIfPresent(sessionId) ?: return
+        val connection = activeConnections.getIfPresent(connectionId)
 
         connection?.let {
             try {
@@ -90,19 +105,19 @@ class Service {
             }
         }
 
-        activeConnections.remove(connectionId)
-        sessionToConnectionMap.remove(sessionId)
-        sessionInfoMap.remove(sessionId)
+        activeConnections.invalidate(connectionId)
+        sessionToConnectionMap.invalidate(sessionId)
+        sessionInfoMap.invalidate(sessionId)
     }
 
     fun getAllActiveSessions(): List<String> {
-        return sessionToConnectionMap.keys.toList()
+        return sessionToConnectionMap.asMap().keys.toList()
     }
 
     @Scheduled(fixedRate = 300000) // 5분마다 실행
     fun cleanupInactiveConnections() {
         val fiveMinutesAgo = LocalDateTime.now().minusMinutes(5)
-        val inactiveConnections = activeConnections.values.filter {
+        val inactiveConnections = activeConnections.asMap().values.filter {
             it.lastActivity.isBefore(fiveMinutesAgo)
         }
 
@@ -111,7 +126,7 @@ class Service {
         }
     }
 
-    fun getConnectionCount(): Int {
-        return activeConnections.size
+    fun getConnectionCount(): Long {
+        return activeConnections.estimatedSize()
     }
 }

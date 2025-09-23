@@ -45,7 +45,7 @@ class Controller(
                 success = true,
                 message = "SSH 연결 상태를 성공적으로 조회했습니다",
                 data = Response.Data(
-                    totalConnections = connectionManagerService.getConnectionCount(),
+                    totalConnections = connectionManagerService.getConnectionCount().toInt(),
                     activeSessions = sessionStatuses
                 )
             )
