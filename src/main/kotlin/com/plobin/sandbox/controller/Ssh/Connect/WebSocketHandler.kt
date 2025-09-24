@@ -59,7 +59,7 @@ class WebSocketHandler(
         if (sessionId != null) {
             outputStreams.remove(sessionId)
             inputStreams.remove(sessionId)
-            connectionManagerService.removeConnection(sessionId)
+            connectionManagerService.getConnection(sessionId)?: connectionManagerService.removeConnection(sessionId)
         }
     }
 
