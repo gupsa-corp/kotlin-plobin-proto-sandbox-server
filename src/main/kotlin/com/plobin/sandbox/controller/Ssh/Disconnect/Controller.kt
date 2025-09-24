@@ -26,23 +26,30 @@ class Controller(
     )
     fun disconnect(@PathVariable sessionId: String): ResponseEntity<Response> {
         return try {
+            // sessionId 존재 여부 명시적 확인
             val connection = connectionManagerService.getConnection(sessionId)
-            if (connection != null) {
-                connectionManagerService.removeConnection(sessionId)
-                val response = Response(
-                    success = true,
-                    message = "SSH 연결이 성공적으로 종료되었습니다",
-                    data = Response.Data(sessionId = sessionId)
-                )
-                ResponseEntity.ok(response)
-            } else {
+
+            if (connection == null) {
+                // 존재하지 않는 경우 Response 바디와 함께 404 반환
                 val response = Response(
                     success = false,
-                    message = "존재하지 않는 세션입니다",
+                    message = "존재하지 않는 세션입니다: $sessionId",
                     data = null
                 )
-                ResponseEntity.notFound().build()
+                return ResponseEntity.status(404).body(response)
             }
+
+            // 존재하는 경우 연결 해제 진행
+            connectionManagerService.removeConnection(sessionId)
+
+            // 성공 응답
+            val response = Response(
+                success = true,
+                message = "SSH 연결이 성공적으로 종료되었습니다",
+                data = Response.Data(sessionId = sessionId)
+            )
+            ResponseEntity.ok(response)
+
         } catch (e: Exception) {
             val response = Response(
                 success = false,
