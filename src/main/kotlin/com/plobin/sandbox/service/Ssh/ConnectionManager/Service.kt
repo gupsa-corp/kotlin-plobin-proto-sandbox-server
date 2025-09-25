@@ -11,28 +11,13 @@ import org.springframework.web.socket.WebSocketSession
 import java.time.LocalDateTime
 import java.util.*
 import com.github.benmanes.caffeine.cache.Cache
-import com.github.benmanes.caffeine.cache.Caffeine
-import java.time.Duration
+import com.plobin.sandbox.config.CacheManagerConfig
 
 @Service("sshConnectionManagerService")
 class Service {
-    private val activeConnections: Cache<String, Connection> = Caffeine.newBuilder()
-        .maximumSize(1000)
-        .expireAfterWrite(Duration.ofMinutes(30))
-        .expireAfterAccess(Duration.ofMinutes(5))
-        .build()
-
-    private val sessionToConnectionMap: Cache<String, String> = Caffeine.newBuilder()
-        .maximumSize(1000)
-        .expireAfterWrite(Duration.ofMinutes(30))
-        .expireAfterAccess(Duration.ofMinutes(5))
-        .build()
-
-    private val sessionInfoMap: Cache<String, SessionInfo> = Caffeine.newBuilder()
-        .maximumSize(1000)
-        .expireAfterWrite(Duration.ofMinutes(30))
-        .expireAfterAccess(Duration.ofMinutes(5))
-        .build()
+    private val activeConnections: Cache<String, Connection> = CacheManagerConfig.SshConnectionCache.create()
+    private val sessionToConnectionMap: Cache<String, String> = CacheManagerConfig.SshConnectionCache.create()
+    private val sessionInfoMap: Cache<String, SessionInfo> = CacheManagerConfig.SshConnectionCache.create()
 
     fun createConnection(sessionId: String, host: String, port: Int, username: String, password: String): Connection {
         try {
@@ -114,7 +99,7 @@ class Service {
         return sessionToConnectionMap.asMap().keys.toList()
     }
 
-    @Scheduled(fixedRate = 300000) // 5분마다 실행
+    @Scheduled(fixedRate = 1800000) // 5분마다 실행
     fun cleanupInactiveConnections() {
         val fiveMinutesAgo = LocalDateTime.now().minusMinutes(5)
         val inactiveConnections = activeConnections.asMap().values.filter {
@@ -122,7 +107,9 @@ class Service {
         }
 
         inactiveConnections.forEach { connection ->
+            connection.connectionId
             removeConnection(connection.sessionId)
+
         }
     }
 
