@@ -61,7 +61,30 @@ class SSHWebSocketClient {
 
         this.ws.onmessage = (event) => {
             if (window.terminal && event.data) {
-                window.terminal.write(event.data);
+                try {
+                    // JSON 메시지 확인
+                    const parsedData = JSON.parse(event.data);
+                    if (parsedData.type === 'resize_response') {
+                        console.log('터미널 크기 변경 완료:', parsedData.status);
+                        return;
+                    }
+                } catch (e) {
+                    // JSON이 아닌 터미널 출력
+                }
+
+                // 데이터 검증 및 처리
+                let outputData = event.data;
+
+                // 빈 데이터 필터링
+                if (!outputData || outputData.length === 0) {
+                    return;
+                }
+
+                // 제어 문자 정규화
+                outputData = this.normalizeControlCharacters(outputData);
+
+                // 터미널에 출력
+                window.terminal.write(outputData);
             }
         };
 
@@ -94,7 +117,12 @@ class SSHWebSocketClient {
      */
     send(data) {
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(data);
+            try {
+                this.ws.send(data);
+            } catch (error) {
+                console.error('WebSocket 전송 오류:', error);
+                this.updateStatus('error', '전송 실패');
+            }
         } else {
             console.warn('WebSocket이 연결되지 않았습니다. 메시지 전송 실패:', data);
         }
@@ -183,6 +211,18 @@ class SSHWebSocketClient {
                     break;
             }
         }
+    }
+
+    /**
+     * 제어 문자 정규화 메서드
+     * @param {string} data
+     * @returns {string}
+     */
+    normalizeControlCharacters(data) {
+        // 일반적인 제어 문자 정규화
+        return data
+            .replace(/\r\n/g, '\r\n')      // CRLF 정규화
+            .replace(/\r(?!\n)/g, '\r\n'); // 단독 CR을 CRLF로 변환
     }
 
     /**

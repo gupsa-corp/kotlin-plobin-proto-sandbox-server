@@ -30,6 +30,12 @@ class Service {
             val channel = session.openChannel("shell") as ChannelShell
             channel.setPtyType("xterm-256color")
             channel.setPtySize(80, 24, 640, 480)
+
+            // 환경 변수 설정
+            channel.setEnv("TERM", "xterm-256color")
+            channel.setEnv("LANG", "en_US.UTF-8")
+            channel.setEnv("LC_ALL", "en_US.UTF-8")
+
             channel.connect()
 
             val connectionId = UUID.randomUUID().toString()

@@ -30,6 +30,13 @@ class TerminalHandler {
                 fontFamily: 'Consolas, "Liberation Mono", Monaco, "Courier New", monospace',
                 fontSize: 14,
                 lineHeight: 1.2,
+                convertEol: true,        // EOL 변환 활성화
+                disableStdin: false,     // 입력 활성화
+                allowProposedApi: true,  // 제안된 API 허용
+                altClickMovesCursor: false, // Alt+클릭으로 커서 이동 비활성화
+                macOptionIsMeta: true,   // Mac에서 Option 키를 Meta로 처리
+                scrollback: 1000,        // 스크롤백 버퍼 크기
+                fastScrollModifier: 'alt', // 빠른 스크롤 수정자
                 theme: {
                     background: '#1e1e1e',
                     foreground: '#ffffff',
@@ -98,23 +105,32 @@ class TerminalHandler {
         // 터미널 입력 이벤트
         this.terminal.onData(data => {
             if (window.sshClient && window.sshClient.isWebSocketConnected()) {
-                window.sshClient.send(data);
-            } else {
-                // WebSocket이 연결되지 않은 경우 로컬 에코
-                if (data === '\r') {
-                    this.terminal.write('\r\n');
-                } else if (data === '\u007f') { // Backspace
-                    this.terminal.write('\b \b');
+                // 특수 키 조합 처리
+                if (data === '\u0003') { // Ctrl+C
+                    window.sshClient.send(data);
+                } else if (data === '\u0004') { // Ctrl+D
+                    window.sshClient.send(data);
                 } else {
-                    this.terminal.write(data);
+                    window.sshClient.send(data);
                 }
+            } else {
+                // WebSocket 연결 없을 때 로컬 에코 개선
+                this.handleLocalEcho(data);
             }
         });
 
         // 터미널 크기 변경 이벤트
         this.terminal.onResize(size => {
             console.log(`터미널 크기 변경: ${size.cols}x${size.rows}`);
-            // SSH 서버에 터미널 크기 변경 알림 (향후 구현)
+            // SSH 서버에 터미널 크기 변경 알림
+            if (window.sshClient && window.sshClient.isWebSocketConnected()) {
+                const resizeMessage = JSON.stringify({
+                    type: 'resize',
+                    cols: size.cols,
+                    rows: size.rows
+                });
+                window.sshClient.send(resizeMessage);
+            }
         });
 
         // 창 크기 변경 시 터미널 크기 자동 조정
@@ -196,6 +212,15 @@ class TerminalHandler {
     fit() {
         if (this.fitAddon) {
             this.fitAddon.fit();
+            // 크기 조정 후 서버에 새로운 크기 전송
+            if (this.terminal && window.sshClient && window.sshClient.isWebSocketConnected()) {
+                const resizeMessage = JSON.stringify({
+                    type: 'resize',
+                    cols: this.terminal.cols,
+                    rows: this.terminal.rows
+                });
+                window.sshClient.send(resizeMessage);
+            }
         }
     }
 
@@ -242,6 +267,24 @@ class TerminalHandler {
         const connectionInfo = document.getElementById('connection-info');
         if (connectionInfo) {
             connectionInfo.textContent = '';
+        }
+    }
+
+    /**
+     * 로컬 에코 처리 메서드
+     * @param {string} data
+     */
+    handleLocalEcho(data) {
+        if (data === '\r') {
+            this.terminal.write('\r\n');
+        } else if (data === '\u007f') { // Backspace
+            this.terminal.write('\b \b');
+        } else if (data === '\u0003') { // Ctrl+C
+            this.terminal.write('^C\r\n');
+        } else if (data === '\u0004') { // Ctrl+D
+            this.terminal.write('^D\r\n');
+        } else {
+            this.terminal.write(data);
         }
     }
 
